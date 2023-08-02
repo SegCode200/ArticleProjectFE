@@ -7,19 +7,20 @@ import { useForm } from "react-hook-form"
 import * as yup from "yup"
 import {Link, useNavigate} from "react-router-dom"
 import img1 from "../../assets/Adeyinka-Alabi-2-Talent-homepage-150x150--n6m8DB.jpg"
-import { registerAuthor } from '../../utils/Api/authApi'
+import { SigninAuthor, registerAuthor } from '../../utils/Api/authApi'
+import { useDispatch } from 'react-redux'
+import { signInuser } from '../../global/globalState'
 
 
-const Register = () => { 
+const Signin = () => { 
     const navigate = useNavigate()
-    const [image, setImage] = useState(img1)
-    const [avatar, setAvatar] = useState("")
+    const dispatch = useDispatch()
+ 
 
     const model = yup.object({
-        name: yup.string().required(),
         email: yup.string().required(),
         password: yup.string().required(),
-        confirm: yup.string().oneOf([yup.ref("password")])
+      
     })
 
     const { register,
@@ -28,35 +29,16 @@ const Register = () => {
         reset } = useForm({
             resolver: yupResolver(model)
     })
-    const onHandleImage = (e: any) => {
-        try {
-            const file = e.target.files[0]
-            const realImage = URL.createObjectURL(file)
-            setImage(realImage)
-            setAvatar(file)
 
-        } catch (error) {
-            console.log(error)
-        }
-    }
-    const onHandleSubmit = handleSubmit(async (data:any)=>{
-        const {name, email, password} = data
+    const onHandleSubmit = handleSubmit(async(data:any)=>{
+        const { email, password} = data
+      
+        SigninAuthor({ email, password}).then((res)=>{
+            navigate("/")
+            dispatch(signInuser(res))
 
-        const formData = new FormData()
-
-        formData.append("name", name)
-        formData.append("email", email)
-        formData.append("password", password)
-        formData.append("avatar", avatar)
-        
-
-
-        registerAuthor(formData).then(()=>{
-            navigate("/siginin")
-            
 
         })
-        reset()
         
 
     })
@@ -70,22 +52,12 @@ const Register = () => {
                     </Left>
                     <Right>
                     <Card  onSubmit={onHandleSubmit}>
-                        <TextHolder>
-                        <Title src={image}/>
-                        <ImageInput id='img1' type='file' onChange={onHandleImage}/>
-                        <Small htmlFor='img1' >Upload Image</Small>
-                        </TextHolder>
+                        <MyText>Welcome Back</MyText>
+                      
 
 
-                        <InputHolder br='jj' bb="j">
-                            
-                            <MdMessage size={40} style={{margin: "0 20px"}}/>
-
-                            <Input placeholder='UserName' {...register("name")}/>
-                            {errors.name && "Enter Username"}
-                          
-                        </InputHolder>
-                        <InputHolder style={{borderRadius: "0"}}>
+                      
+                        <InputHolder style={{borderRadius: "0"}} br="mm">
                             
                             <MdInbox size={40} style={{margin: "0 20px"}}/>
 
@@ -93,7 +65,7 @@ const Register = () => {
                             {errors.email && "Enter email"}
                           
                         </InputHolder>
-                        <InputHolder style={{borderRadius: "0"}}>
+                        <InputHolder  br="mm">
                             
                             <MdPassword size={40} style={{margin: "0 20px"}}/>
 
@@ -102,20 +74,14 @@ const Register = () => {
                           
                         </InputHolder>
 
-                        <InputHolder br='rr'>
-                           <MdPassword size={40} style={{margin: "0 20px"}}/>
-                            
-                            <Input placeholder='Confirm Password' {...register("confirm")} />
-                            {errors.confirm && "Enter Cofirm Password"}
-                            
-                        </InputHolder>
+                      
                       
 
 
 
-                        <div style={{display : "flex"}}>
-                        <Button type='submit'  >Sign Up</Button>
-                        <Button1 to="/siginin"  >Sign in</Button1>
+                        <div style={{display : "flex", margin : "30px 0"}}>
+                        <Button type='submit'  >Login</Button>
+                        <Button1 to="/register"  >Sign Up</Button1>
                             
                         {/* <Link
                            
@@ -137,7 +103,7 @@ const Register = () => {
   )
 }
 
-export default Register
+export default Signin
 
 const Image = styled.img`
 width: 500px;
@@ -172,7 +138,9 @@ position: relative;
 
 `
 const MyText = styled.div`
-margin: 0 5px
+margin: 40px 5px;
+font-size: 30px;
+font-weight: 700;
 `
 
 const Line = styled.div`

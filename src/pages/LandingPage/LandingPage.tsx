@@ -1,14 +1,29 @@
 import React from 'react'
-import Register4 from "../AllAuth/Project4/Register4";
-
+import styled  from 'styled-components'
 
 const LandingPage = () => {
-  return (
-    <div>
-      <Register4/>
-
-    </div>
-  )
+    return (
+        <div>
+            <Container>
+                <Main>
+                    <Text>Home</Text>
+                </Main>
+            </Container>
+        </div>
+    )
 }
 
 export default LandingPage
+
+const Text = styled.div`
+padding-left: 10px
+`
+
+const Main = styled.div`
+
+`
+
+const Container = styled.div`
+
+
+`

@@ -4,13 +4,13 @@ const url:string = "http://localhost/6789/api/author"
 
 export const registerAuthor = async(data:any)=>{
     try {
-        const config:{} = {
-            "content-type": "application/json"
-        }
+        const config:{} = { 
+            headers: { 'Content-Type': 'multipart/form-data' }
+         }
         return await axios.post(`${url}/register`, data, config).then((res:any)=>{
             return res.data.data
         })
-        
+            
     } catch (error) {
         console.log(error)
         
